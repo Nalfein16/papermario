@@ -1346,6 +1346,7 @@ s32 inflict_status(Actor* target, u32 statusTypeKey, s8 duration) {
     s32 phi_v0;
 
     switch (statusTypeKey) { // switch 1
+    // fear, dizzy, paralyze, sleep, frozen, stop, poison, shrink
     case 3: // switch 1
     case 4: // switch 1
     case 5: // switch 1
@@ -1354,62 +1355,71 @@ s32 inflict_status(Actor* target, u32 statusTypeKey, s8 duration) {
     case 8: // switch 1
     case 9: // switch 1
     case 10: // switch 1
-        if (((target->actorID != 0) || ((phi_v0 = 0, (is_ability_active(0xE) == 0)) && (is_ability_active(0x15) == 0) && (gBattleStatus.hustleTurns == 0))) && (phi_v0 = 1, (target->actorID != 0x100))) {
-            if (target->debuff != statusTypeKey) {
-                target->status = (s8) statusTypeKey;
-            }
-            target->ptrDefuffIcon->ptrPropertyList[0x3C] = 0;
-            target->debuff = (s8) statusTypeKey;
-            target->debuffDuration = duration;
-            if ((s32) duration >= 0xA) {
-                target->debuffDuration = 9;
-            }
-            switch (statusTypeKey) { // switch 2
-            case 7: // switch 2
-                phi_v0 = 1;
-                if (target->actorID != 0x100) {
-                    temp_v1 = target->unk_225[3];
-                    if (temp_v1 != 0) {
-                        *temp_v1 = (s32) (*temp_v1 | 0x10);
-                    }
-                    target->unk_225[3] = playFX_81(0, target->currentPos.x, target->currentPos.y, target->currentPos.z, 1.0f, 0);
-                    func_80047820(target->unk_436, 7);
-                    return 1;
+        if ((
+                (target->actorID != 0)
+                || (
+                    (phi_v0 = 0, (is_ability_active(0xE) == 0))
+                    && (is_ability_active(0x15) == 0)
+                    && (gBattleStatus.hustleTurns == 0)
+                )
+            ) && (phi_v0 = 1, (target->actorID != 0x100)))
+            {
+                if (target->debuff != statusTypeKey) {
+                    target->status = (s8) statusTypeKey;
                 }
-                // Duplicate return node #39. Try simplifying control flow for better match
-                return phi_v0;
-            case 6: // switch 2
-                func_80266DAC(target, 3);
-                func_80047820(target->unk_436, 6);
-                return 1;
-            case 5: // switch 2
-                func_80266DAC(target, 7);
-                func_80047820(target->unk_436, 5);
-                return 1;
-            case 4: // switch 2
-                func_80047820(target->unk_436, 4);
-                return 1;
-            case 3: // switch 2
-                func_80266DAC(target, 5);
-                func_80047820(target->unk_436, 3);
-                return 1;
-            case 9: // switch 2
-                func_80266DAC(target, 6);
-                func_80047820(target->unk_436, 9);
-                return 1;
-            case 10: // switch 2
-                func_80047820(target->unk_436, 0xA);
-                return 1;
-            default: // switch 2
+                target->ptrDefuffIcon->ptrPropertyList[0x3C] = 0;
+                target->debuff = (s8) statusTypeKey;
+                target->debuffDuration = duration;
+                if ((s32) duration >= 0xA) {
+                    target->debuffDuration = 9;
+                }
+                switch (statusTypeKey) { // switch 2
+                    case 7: // switch 2
+                        phi_v0 = 1;
+                        if (target->actorID != 0x100) {
+                            temp_v1 = target->unk_225[3];
+                            if (temp_v1 != 0) {
+                                *temp_v1 = (s32) (*temp_v1 | 0x10);
+                            }
+                            target->unk_225[3] = playFX_81(0, target->currentPos.x, target->currentPos.y, target->currentPos.z, 1.0f, 0);
+                            func_80047820(target->unk_436, 7);
+                            return 1;
+                        }
+                        // Duplicate return node #39. Try simplifying control flow for better match
+                        return phi_v0;
+                    case 6: // switch 2
+                        func_80266DAC(target, 3);
+                        func_80047820(target->unk_436, 6);
+                        return 1;
+                    case 5: // switch 2
+                        func_80266DAC(target, 7);
+                        func_80047820(target->unk_436, 5);
+                        return 1;
+                    case 4: // switch 2
+                        func_80047820(target->unk_436, 4);
+                        return 1;
+                    case 3: // switch 2
+                        func_80266DAC(target, 5);
+                        func_80047820(target->unk_436, 3);
+                        return 1;
+                    case 9: // switch 2
+                        func_80266DAC(target, 6);
+                        func_80047820(target->unk_436, 9);
+                        return 1;
+                    case 10: // switch 2
+                        func_80047820(target->unk_436, 0xA);
+                        return 1;
+                    default: // switch 2
 block_38:
-                phi_v0 = 1;
-                // Duplicate return node #39. Try simplifying control flow for better match
+                        phi_v0 = 1;
+                        // Duplicate return node #39. Try simplifying control flow for better match
+                        return phi_v0;
+                }
+            } else {
                 return phi_v0;
             }
-        } else {
-            return phi_v0;
-        }
         break;
+    // static
     case 11: // switch 1
         if (target->actorID != 0x100) {
             target->staticStatus = (s8) statusTypeKey;
@@ -1423,6 +1433,7 @@ block_38:
             return 1;
         }
         goto block_38;
+    // stone
     case 12: // switch 1
         phi_v1 = 0xC;
         if (target->actorID != 0x100) {
@@ -1435,6 +1446,7 @@ block_33:
             target->status = phi_v1;
         }
         goto block_38;
+    // daze
     case 13: // switch 1
         phi_v1 = 0xD;
         if ((s32) target->koStatus < (s32) statusTypeKey) {
@@ -1446,6 +1458,7 @@ block_33:
             goto block_33;
         }
         goto block_38;
+    // E?
     case 14: // switch 1
         if (target->actorID != 0x100) {
             target->transStatus = 0xE;

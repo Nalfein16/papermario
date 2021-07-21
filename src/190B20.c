@@ -1202,7 +1202,263 @@ INCLUDE_ASM(s32, "190B20", lookup_status_chance); // exactly (?) the same as loo
 
 INCLUDE_ASM(s32, "190B20", lookup_status_duration_mod); // exactly (?) the same as lookup_defense
 
-INCLUDE_ASM(s32, "190B20", inflict_status);
+// INCLUDE_ASM(s32, "190B20", inflict_status);
+// ? func_80047820(s16, ?); // extern
+// ? func_80047928(s16, ?); // extern
+// ? func_80047A30(s16, ?); // extern
+// ? func_80266DAC(void*, ?); // extern
+// s32 is_ability_active(?); // extern
+// s32* playFX_81(?, s32, s32, s32, f32, s32); // extern
+// extern ? gBattleStatus;
+
+// ? inflict_status(void* arg0, u32 arg1, s8 arg2) {
+//     s32* temp_v1;
+//     s8 phi_v1;
+//     ? phi_v0;
+
+//     switch (arg1) { // switch 1
+//     case 3: // switch 1
+//     case 4: // switch 1
+//     case 5: // switch 1
+//     case 6: // switch 1
+//     case 7: // switch 1
+//     case 8: // switch 1
+//     case 9: // switch 1
+//     case 10: // switch 1
+//         if (((arg0->unk192 != 0) || ((phi_v0 = 0, (is_ability_active(0xE) == 0)) && (is_ability_active(0x15) == 0) && (gBattleStatus.unk8B == 0))) && (phi_v0 = 1, (arg0->unk192 != 0x100))) {
+//             if (arg0->unk210 != arg1) {
+//                 arg0->unk21C = (s8) arg1;
+//             }
+//             arg0->unk440->unkC->unk3C = 0;
+//             arg0->unk210 = (s8) arg1;
+//             arg0->unk211 = arg2;
+//             if ((s32) arg2 >= 0xA) {
+//                 arg0->unk211 = 9;
+//             }
+//             switch (arg1) { // switch 2
+//             case 7: // switch 2
+//                 phi_v0 = 1;
+//                 if (arg0->unk192 != 0x100) {
+//                     temp_v1 = arg0->unk228;
+//                     if (temp_v1 != 0) {
+//                         *temp_v1 = (s32) (*temp_v1 | 0x10);
+//                     }
+//                     arg0->unk228 = playFX_81(0, arg0->unk144, arg0->unk148, arg0->unk14C, 1.0f, 0);
+//                     func_80047820(arg0->unk436, 7);
+//                     return 1;
+//                 }
+//                 // Duplicate return node #39. Try simplifying control flow for better match
+//                 return phi_v0;
+//             case 6: // switch 2
+//                 func_80266DAC(arg0, 3);
+//                 func_80047820(arg0->unk436, 6);
+//                 return 1;
+//             case 5: // switch 2
+//                 func_80266DAC(arg0, 7);
+//                 func_80047820(arg0->unk436, 5);
+//                 return 1;
+//             case 4: // switch 2
+//                 func_80047820(arg0->unk436, 4);
+//                 return 1;
+//             case 3: // switch 2
+//                 func_80266DAC(arg0, 5);
+//                 func_80047820(arg0->unk436, 3);
+//                 return 1;
+//             case 9: // switch 2
+//                 func_80266DAC(arg0, 6);
+//                 func_80047820(arg0->unk436, 9);
+//                 return 1;
+//             case 10: // switch 2
+//                 func_80047820(arg0->unk436, 0xA);
+//                 return 1;
+//             default: // switch 1
+//             default: // switch 2
+// block_38:
+//                 phi_v0 = 1;
+//                 // Duplicate return node #39. Try simplifying control flow for better match
+//                 return phi_v0;
+//             }
+//         } else {
+//             return phi_v0;
+//         }
+//         break;
+//     case 11: // switch 1
+//         if (arg0->unk192 != 0x100) {
+//             arg0->unk212 = (s8) arg1;
+//             arg0->unk213 = arg2;
+//             if ((s32) arg2 >= 0xA) {
+//                 arg0->unk213 = 9;
+//             }
+//             arg0->unk21C = 0xB;
+//             func_80266DAC(arg0, 4);
+//             func_80047928(arg0->unk436, 0xB);
+//             return 1;
+//         }
+//         goto block_38;
+//     case 12: // switch 1
+//         phi_v1 = 0xC;
+//         if (arg0->unk192 != 0x100) {
+//             arg0->unk214 = 0xC;
+//             arg0->unk215 = arg2;
+//             if ((s32) arg2 >= 0xA) {
+//                 arg0->unk215 = 9;
+//             }
+// block_33:
+//             arg0->unk21C = phi_v1;
+//         }
+//         goto block_38;
+//     case 13: // switch 1
+//         phi_v1 = 0xD;
+//         if ((s32) arg0->unk216 < (s32) arg1) {
+//             arg0->unk216 = 0xD;
+//             arg0->unk217 = arg2;
+//             if ((s32) arg2 >= 0xA) {
+//                 arg0->unk217 = 9;
+//             }
+//             goto block_33;
+//         }
+//         goto block_38;
+//     case 14: // switch 1
+//         if (arg0->unk192 != 0x100) {
+//             arg0->unk218 = 0xE;
+//             arg0->unk219 = arg2;
+//             if ((s32) arg2 >= 0xA) {
+//                 arg0->unk219 = 9;
+//             }
+//             arg0->unk21C = 0xE;
+//             func_80047A30(arg0->unk436, 0xE);
+//         }
+//         goto block_38;
+//     }
+// }
+// ? func_80047820(s16, ?); // extern
+// ? func_80047928(s16, ?); // extern
+// ? func_80047A30(s16, ?); // extern
+// ? func_80266DAC(void*, ?); // extern
+// s32 is_ability_active(?); // extern
+// s32* playFX_81(?, s32, s32, s32, f32, s32); // extern
+// extern ? gBattleStatus;
+
+// 
+s32 inflict_status(Actor* target, u32 statusTypeKey, s8 duration) {
+    s32* temp_v1;
+    s8 phi_v1;
+    s32 phi_v0;
+
+    switch (statusTypeKey) { // switch 1
+    case 3: // switch 1
+    case 4: // switch 1
+    case 5: // switch 1
+    case 6: // switch 1
+    case 7: // switch 1
+    case 8: // switch 1
+    case 9: // switch 1
+    case 10: // switch 1
+        if (((target->actorID != 0) || ((phi_v0 = 0, (is_ability_active(0xE) == 0)) && (is_ability_active(0x15) == 0) && (gBattleStatus.hustleTurns == 0))) && (phi_v0 = 1, (target->actorID != 0x100))) {
+            if (target->debuff != statusTypeKey) {
+                target->status = (s8) statusTypeKey;
+            }
+            target->ptrDefuffIcon->ptrPropertyList[0x3C] = 0;
+            target->debuff = (s8) statusTypeKey;
+            target->debuffDuration = duration;
+            if ((s32) duration >= 0xA) {
+                target->debuffDuration = 9;
+            }
+            switch (statusTypeKey) { // switch 2
+            case 7: // switch 2
+                phi_v0 = 1;
+                if (target->actorID != 0x100) {
+                    temp_v1 = target->unk_225[3];
+                    if (temp_v1 != 0) {
+                        *temp_v1 = (s32) (*temp_v1 | 0x10);
+                    }
+                    target->unk_225[3] = playFX_81(0, target->currentPos.x, target->currentPos.y, target->currentPos.z, 1.0f, 0);
+                    func_80047820(target->unk_436, 7);
+                    return 1;
+                }
+                // Duplicate return node #39. Try simplifying control flow for better match
+                return phi_v0;
+            case 6: // switch 2
+                func_80266DAC(target, 3);
+                func_80047820(target->unk_436, 6);
+                return 1;
+            case 5: // switch 2
+                func_80266DAC(target, 7);
+                func_80047820(target->unk_436, 5);
+                return 1;
+            case 4: // switch 2
+                func_80047820(target->unk_436, 4);
+                return 1;
+            case 3: // switch 2
+                func_80266DAC(target, 5);
+                func_80047820(target->unk_436, 3);
+                return 1;
+            case 9: // switch 2
+                func_80266DAC(target, 6);
+                func_80047820(target->unk_436, 9);
+                return 1;
+            case 10: // switch 2
+                func_80047820(target->unk_436, 0xA);
+                return 1;
+            default: // switch 2
+block_38:
+                phi_v0 = 1;
+                // Duplicate return node #39. Try simplifying control flow for better match
+                return phi_v0;
+            }
+        } else {
+            return phi_v0;
+        }
+        break;
+    case 11: // switch 1
+        if (target->actorID != 0x100) {
+            target->staticStatus = (s8) statusTypeKey;
+            target->staticDuration = duration;
+            if ((s32) duration >= 0xA) {
+                target->staticDuration = 9;
+            }
+            target->status = 0xB;
+            func_80266DAC(target, 4);
+            func_80047928(target->unk_436, 0xB);
+            return 1;
+        }
+        goto block_38;
+    case 12: // switch 1
+        phi_v1 = 0xC;
+        if (target->actorID != 0x100) {
+            target->stoneStatus = 0xC;
+            target->stoneDuration = duration;
+            if ((s32) duration >= 0xA) {
+                target->stoneDuration = 9;
+            }
+block_33:
+            target->status = phi_v1;
+        }
+        goto block_38;
+    case 13: // switch 1
+        phi_v1 = 0xD;
+        if ((s32) target->koStatus < (s32) statusTypeKey) {
+            target->koStatus = 0xD;
+            target->koDuration = duration;
+            if ((s32) duration >= 0xA) {
+                target->koDuration = 9;
+            }
+            goto block_33;
+        }
+        goto block_38;
+    case 14: // switch 1
+        if (target->actorID != 0x100) {
+            target->transStatus = 0xE;
+            target->transDuration = duration;
+            if ((s32) duration >= 0xA) {
+                target->transDuration = 9;
+            }
+            target->status = 0xE;
+            func_80047A30(target->unk_436, 0xE);
+        }
+        goto block_38;
+    }
+}
 
 s32 inflict_partner_ko(Actor* target, s32 statusTypeKey, s32 duration) {
     if (statusTypeKey == STATUS_DAZE) {

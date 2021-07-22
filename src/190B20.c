@@ -1373,9 +1373,9 @@ s32 inflict_status(Actor* target, u32 statusTypeKey, s8 duration) {
                 if ((s32) duration >= 0xA) {
                     target->debuffDuration = 9;
                 }
+                phi_v0 = 1;
                 switch (statusTypeKey) { // switch 2
                     case 7: // switch 2
-                        phi_v0 = 1;
                         if (target->actorID != 0x100) {
                             temp_v1 = target->unk_225[3];
                             if (temp_v1 != 0) {
@@ -1383,40 +1383,26 @@ s32 inflict_status(Actor* target, u32 statusTypeKey, s8 duration) {
                             }
                             target->unk_225[3] = playFX_81(0, target->currentPos.x, target->currentPos.y, target->currentPos.z, 1.0f, 0);
                             func_80047820(target->unk_436, 7);
-                            return 1;
                         }
-                        // Duplicate return node #39. Try simplifying control flow for better match
-                        return phi_v0;
                     case 6: // switch 2
                         func_80266DAC(target, 3);
                         func_80047820(target->unk_436, 6);
-                        return 1;
                     case 5: // switch 2
                         func_80266DAC(target, 7);
                         func_80047820(target->unk_436, 5);
-                        return 1;
                     case 4: // switch 2
                         func_80047820(target->unk_436, 4);
-                        return 1;
                     case 3: // switch 2
                         func_80266DAC(target, 5);
                         func_80047820(target->unk_436, 3);
-                        return 1;
                     case 9: // switch 2
                         func_80266DAC(target, 6);
                         func_80047820(target->unk_436, 9);
-                        return 1;
                     case 10: // switch 2
                         func_80047820(target->unk_436, 0xA);
-                        return 1;
                     default: // switch 2
-block_38:
                         phi_v0 = 1;
-                        // Duplicate return node #39. Try simplifying control flow for better match
-                        return phi_v0;
                 }
-            } else {
-                return phi_v0;
             }
         break;
     // static
@@ -1430,9 +1416,8 @@ block_38:
             target->status = 0xB;
             func_80266DAC(target, 4);
             func_80047928(target->unk_436, 0xB);
-            return 1;
         }
-        goto block_38;
+        phi_v0 = 1;
     // stone
     case 12: // switch 1
         phi_v1 = 0xC;
@@ -1442,10 +1427,9 @@ block_38:
             if ((s32) duration >= 0xA) {
                 target->stoneDuration = 9;
             }
-block_33:
             target->status = phi_v1;
         }
-        goto block_38;
+        phi_v0 = 1;
     // daze
     case 13: // switch 1
         phi_v1 = 0xD;
@@ -1455,9 +1439,9 @@ block_33:
             if ((s32) duration >= 0xA) {
                 target->koDuration = 9;
             }
-            goto block_33;
+            target->status = phi_v1;
         }
-        goto block_38;
+        phi_v0 = 1;
     // E?
     case 14: // switch 1
         if (target->actorID != 0x100) {
@@ -1469,8 +1453,10 @@ block_33:
             target->status = 0xE;
             func_80047A30(target->unk_436, 0xE);
         }
-        goto block_38;
+        phi_v0 = 1;
     }
+
+    return phi_v0;
 }
 
 s32 inflict_partner_ko(Actor* target, s32 statusTypeKey, s32 duration) {

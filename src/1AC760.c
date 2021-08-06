@@ -285,9 +285,9 @@ ApiStatus GetActorLevel(ScriptInstance* script, s32 isInitialCall) {
 // }
 s32 PartnerDamageEnemy(Actor* enemyActor) {
     s32 temp_s0_6;
-    s32 temp_s4;
+    Vec3f currentPosition;
     s32 temp_v0;
-    s32* temp_s0;
+    ActorMovementWalk* enemyActorWalk;
     s32* currentAttackElement;
     s32* currentAttackEventSuppression;
     s32* temp_s0_4;
@@ -297,9 +297,9 @@ s32 PartnerDamageEnemy(Actor* enemyActor) {
     s32 phi_v0;
     s32 phi_v0_2;
 
-    temp_s0 = enemyActor->walk;
-    temp_s4 = *temp_s0;
-    currentAttackElement = temp_s0 + 4;
+    enemyActorWalk = &(enemyActor->walk);
+    currentPosition = enemyActorWalk->currentPos;
+    currentAttackElement = enemyActorWalk + 4;
     currentAttackEventSuppression = currentAttackElement + 4;
     actor = get_actor(enemyActor->currentPos.z);
     gBattleStatus.currentAttackElement = (s32) *currentAttackElement;
@@ -346,7 +346,7 @@ block_9:
     } else {
         gBattleStatus.flags1 = (s32) (gBattleStatus.flags1 & ~0x800);
     }
-    temp_v1 = gBattleStatus.unk193;
+    temp_v1 = gBattleStatus.unk193; // last byte of currentAttackStatus
     gBattleStatus.currentTargetID = (u16) actor->targetActorID;
     gBattleStatus.statusChance = temp_v1;
     gBattleStatus.currentTargetPart = (u8) actor->targetPartIndex;
@@ -354,9 +354,10 @@ block_9:
         gBattleStatus.statusChance = 0U;
     }
     gBattleStatus.statusDuration = (s8) ((s32) (gBattleStatus.currentAttackStatus & 0xF00) >> 8);
-    temp_v0 = calc_partner_damage_enemy(-0x801);
+    // temp_v0 = calc_partner_damage_enemy(-0x801);
+    temp_v0 = calc_partner_damage_enemy(); // it's a void... what are these numbers?
     if (temp_v0 >= 0) {
-        set_variable(enemyActor, temp_s4, temp_v0);
+        set_variable(enemyActor, currentPosition, temp_v0);
         if (does_script_exist_by_ref(enemyActor) != 0) {
             return 2;
         }

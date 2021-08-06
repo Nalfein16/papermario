@@ -283,31 +283,31 @@ ApiStatus GetActorLevel(ScriptInstance* script, s32 isInitialCall) {
 //     }
 //     return 0xFF;
 // }
-s32 PartnerDamageEnemy(Actor* enemyActor) {
+s32 PartnerDamageEnemy(ScriptInstance* script) {
     s32 temp_s0_6;
-    Vec3f currentPosition;
+    s32 temp_s4;
     s32 temp_v0;
-    ActorMovementWalk* enemyActorWalk;
-    s32* currentAttackElement;
-    s32* currentAttackEventSuppression;
+    s32* temp_s0;
+    s32* temp_s0_2;
+    s32* temp_s0_3;
     s32* temp_s0_4;
     s32* temp_s0_5;
     u8 temp_v1;
-    Actor* actor;
+    Actor* temp_s3;
     s32 phi_v0;
     s32 phi_v0_2;
 
-    enemyActorWalk = &(enemyActor->walk);
-    currentPosition = enemyActorWalk->currentPos;
-    currentAttackElement = enemyActorWalk + 4;
-    currentAttackEventSuppression = currentAttackElement + 4;
-    actor = get_actor(enemyActor->currentPos.z);
-    gBattleStatus.currentAttackElement = (s32) *currentAttackElement;
-    temp_s0_4 = currentAttackEventSuppression + 4;
-    gBattleStatus.currentAttackEventSuppression = (s32) *currentAttackEventSuppression;
+    temp_s0 = script->ptrReadPos;
+    temp_s3 = get_actor(script->owner1.enemyID);
+    temp_s4 = *temp_s0;
+    temp_s0_2 = temp_s0 + 4;
+    temp_s0_3 = temp_s0_2 + 4;
+    gBattleStatus.currentAttackElement = (s32) *temp_s0_2;
+    temp_s0_4 = temp_s0_3 + 4;
+    gBattleStatus.currentAttackEventSuppression = (s32) *temp_s0_3;
     temp_s0_5 = temp_s0_4 + 4;
     gBattleStatus.currentAttackStatus = (s32) *temp_s0_4;
-    gBattleStatus.currentAttackDamage = get_variable(enemyActor, *temp_s0_5);
+    gBattleStatus.currentAttackDamage = get_variable(script, *temp_s0_5);
     gBattleStatus.powerBounceCounter = 0;
     temp_s0_6 = *(temp_s0_5 + 4);
     if ((temp_s0_6 & 0x30) != 0x30) {
@@ -346,19 +346,19 @@ block_9:
     } else {
         gBattleStatus.flags1 = (s32) (gBattleStatus.flags1 & ~0x800);
     }
-    temp_v1 = gBattleStatus.currentAttackStatus; // actually just the last byte of currentAttackStatus
-    gBattleStatus.currentTargetID = (u16) actor->targetActorID;
+    temp_v1 = gBattleStatus.currentAttackStatus;
+    gBattleStatus.currentTargetID = (u16) temp_s3->targetActorID;
     gBattleStatus.statusChance = temp_v1;
-    gBattleStatus.currentTargetPart = (u8) actor->targetPartIndex;
+    gBattleStatus.currentTargetPart = (u8) temp_s3->targetPartIndex;
     if ((temp_v1 & 0xFF) == 0xFF) {
         gBattleStatus.statusChance = 0U;
     }
     gBattleStatus.statusDuration = (s8) ((s32) (gBattleStatus.currentAttackStatus & 0xF00) >> 8);
     // temp_v0 = calc_partner_damage_enemy(-0x801);
-    temp_v0 = calc_partner_damage_enemy(); // it's a void... what are these numbers?
+    temp_v0 = calc_partner_damage_enemy(); // this is a void call... what's with the number?
     if (temp_v0 >= 0) {
-        set_variable(enemyActor, currentPosition.x, temp_v0);
-        if (does_script_exist_by_ref(enemyActor) != 0) {
+        set_variable(script, temp_s4, temp_v0);
+        if (does_script_exist_by_ref(script) != 0) {
             return 2;
         }
         // Duplicate return node #28. Try simplifying control flow for better match

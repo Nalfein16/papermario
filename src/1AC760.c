@@ -193,7 +193,179 @@ ApiStatus GetActorLevel(ScriptInstance* script, s32 isInitialCall) {
     return ApiStatus_DONE2;
 }
 
-INCLUDE_ASM(s32, "1AC760", PartnerDamageEnemy);
+// INCLUDE_ASM(s32, "1AC760", PartnerDamageEnemy);
+// s32 calc_partner_damage_enemy(s32); // extern
+// s32 does_script_exist_by_ref(void*); // extern
+// void* get_actor(s32); // extern
+// s16 get_variable(void*, s32); // extern
+// ? set_variable(void*, s32, s32); // extern
+// extern ? gBattleStatus;
+
+// ? PartnerDamageEnemy(void* arg0) {
+//     s32 temp_s0_6;
+//     s32 temp_s4;
+//     s32 temp_v0;
+//     s32* temp_s0;
+//     s32* temp_s0_2;
+//     s32* temp_s0_3;
+//     s32* temp_s0_4;
+//     s32* temp_s0_5;
+//     u8 temp_v1;
+//     void* temp_s3;
+//     s32 phi_v0;
+//     s32 phi_v0_2;
+
+//     temp_s0 = arg0->unkC;
+//     temp_s4 = *temp_s0;
+//     temp_s0_2 = temp_s0 + 4;
+//     temp_s0_3 = temp_s0_2 + 4;
+//     temp_s3 = get_actor(arg0->unk148);
+//     gBattleStatus.unk188 = (s32) *temp_s0_2;
+//     temp_s0_4 = temp_s0_3 + 4;
+//     gBattleStatus.unk18C = (s32) *temp_s0_3;
+//     temp_s0_5 = temp_s0_4 + 4;
+//     gBattleStatus.unk190 = (s32) *temp_s0_4;
+//     gBattleStatus.unk17E = get_variable(arg0, *temp_s0_5);
+//     gBattleStatus.unk198 = 0;
+//     temp_s0_6 = *(temp_s0_5 + 4);
+//     if ((temp_s0_6 & 0x30) != 0x30) {
+//         if ((temp_s0_6 & 0x10) != 0) {
+//             phi_v0_2 = gBattleStatus.unk0 | 0x10;
+//             goto block_9;
+//         }
+//         if ((temp_s0_6 & 0x20) != 0) {
+//             phi_v0 = (gBattleStatus.unk0 & ~0x10) | 0x20;
+//         } else {
+//             phi_v0_2 = gBattleStatus.unk0 & ~0x10;
+// block_9:
+//             phi_v0 = phi_v0_2 & ~0x20;
+//         }
+//     } else {
+//         phi_v0 = gBattleStatus.unk0 | 0x30;
+//     }
+//     gBattleStatus.unk0 = phi_v0;
+//     if ((temp_s0_6 & 0x40) != 0) {
+//         gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 | 0x40);
+//     } else {
+//         gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 & ~0x40);
+//     }
+//     if ((temp_s0_6 & 0x200) != 0) {
+//         gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 | 0x200);
+//     } else {
+//         gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 & ~0x200);
+//     }
+//     if ((temp_s0_6 & 0x80) != 0) {
+//         gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 | 0x80);
+//     } else {
+//         gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 & ~0x80);
+//     }
+//     if ((temp_s0_6 & 0x800) != 0) {
+//         gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 | 0x800);
+//     } else {
+//         gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 & ~0x800);
+//     }
+//     temp_v1 = gBattleStatus.unk193;
+//     gBattleStatus.unk1A0 = (u16) temp_s3->unk428;
+//     gBattleStatus.unk194 = temp_v1;
+//     gBattleStatus.unk1A2 = (u8) temp_s3->unk426;
+//     if ((temp_v1 & 0xFF) == 0xFF) {
+//         gBattleStatus.unk194 = 0U;
+//     }
+//     gBattleStatus.unk195 = (s8) ((s32) (gBattleStatus.unk190 & 0xF00) >> 8);
+//     temp_v0 = calc_partner_damage_enemy(-0x801);
+//     if (temp_v0 >= 0) {
+//         set_variable(arg0, temp_s4, temp_v0);
+//         if (does_script_exist_by_ref(arg0) != 0) {
+//             return 2;
+//         }
+//         // Duplicate return node #28. Try simplifying control flow for better match
+//         return 0xFF;
+//     }
+//     return 0xFF;
+// }
+s32 PartnerDamageEnemy(void* arg0) {
+    s32 temp_s0_6;
+    s32 temp_s4;
+    s32 temp_v0;
+    s32* temp_s0;
+    s32* temp_s0_2;
+    s32* temp_s0_3;
+    s32* temp_s0_4;
+    s32* temp_s0_5;
+    u8 temp_v1;
+    void* temp_s3;
+    s32 phi_v0;
+    s32 phi_v0_2;
+
+    temp_s0 = arg0->unkC;
+    temp_s4 = *temp_s0;
+    temp_s0_2 = temp_s0 + 4;
+    temp_s0_3 = temp_s0_2 + 4;
+    temp_s3 = get_actor(arg0->unk148);
+    gBattleStatus.unk188 = (s32) *temp_s0_2;
+    temp_s0_4 = temp_s0_3 + 4;
+    gBattleStatus.unk18C = (s32) *temp_s0_3;
+    temp_s0_5 = temp_s0_4 + 4;
+    gBattleStatus.unk190 = (s32) *temp_s0_4;
+    gBattleStatus.unk17E = get_variable(arg0, *temp_s0_5);
+    gBattleStatus.unk198 = 0;
+    temp_s0_6 = *(temp_s0_5 + 4);
+    if ((temp_s0_6 & 0x30) != 0x30) {
+        if ((temp_s0_6 & 0x10) != 0) {
+            phi_v0_2 = gBattleStatus.unk0 | 0x10;
+            goto block_9;
+        }
+        if ((temp_s0_6 & 0x20) != 0) {
+            phi_v0 = (gBattleStatus.unk0 & ~0x10) | 0x20;
+        } else {
+            phi_v0_2 = gBattleStatus.unk0 & ~0x10;
+block_9:
+            phi_v0 = phi_v0_2 & ~0x20;
+        }
+    } else {
+        phi_v0 = gBattleStatus.unk0 | 0x30;
+    }
+    gBattleStatus.unk0 = phi_v0;
+    if ((temp_s0_6 & 0x40) != 0) {
+        gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 | 0x40);
+    } else {
+        gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 & ~0x40);
+    }
+    if ((temp_s0_6 & 0x200) != 0) {
+        gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 | 0x200);
+    } else {
+        gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 & ~0x200);
+    }
+    if ((temp_s0_6 & 0x80) != 0) {
+        gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 | 0x80);
+    } else {
+        gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 & ~0x80);
+    }
+    if ((temp_s0_6 & 0x800) != 0) {
+        gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 | 0x800);
+    } else {
+        gBattleStatus.unk0 = (s32) (gBattleStatus.unk0 & ~0x800);
+    }
+    temp_v1 = gBattleStatus.unk193;
+    gBattleStatus.unk1A0 = (u16) temp_s3->unk428;
+    gBattleStatus.unk194 = temp_v1;
+    gBattleStatus.unk1A2 = (u8) temp_s3->unk426;
+    if ((temp_v1 & 0xFF) == 0xFF) {
+        gBattleStatus.unk194 = 0U;
+    }
+    gBattleStatus.unk195 = (s8) ((s32) (gBattleStatus.unk190 & 0xF00) >> 8);
+    temp_v0 = calc_partner_damage_enemy(-0x801);
+    if (temp_v0 >= 0) {
+        set_variable(arg0, temp_s4, temp_v0);
+        if (does_script_exist_by_ref(arg0) != 0) {
+            return 2;
+        }
+        // Duplicate return node #28. Try simplifying control flow for better match
+        return 0xFF;
+    }
+    return 0xFF;
+}
+
 
 INCLUDE_ASM(s32, "1AC760", PartnerAfflictEnemy);
 

@@ -346,7 +346,7 @@ block_9:
     } else {
         gBattleStatus.flags1 = (s32) (gBattleStatus.flags1 & ~0x800);
     }
-    temp_v1 = gBattleStatus.unk193; // last byte of currentAttackStatus
+    temp_v1 = gBattleStatus.currentAttackStatus; // actually just the last byte of currentAttackStatus
     gBattleStatus.currentTargetID = (u16) actor->targetActorID;
     gBattleStatus.statusChance = temp_v1;
     gBattleStatus.currentTargetPart = (u8) actor->targetPartIndex;
@@ -357,7 +357,7 @@ block_9:
     // temp_v0 = calc_partner_damage_enemy(-0x801);
     temp_v0 = calc_partner_damage_enemy(); // it's a void... what are these numbers?
     if (temp_v0 >= 0) {
-        set_variable(enemyActor, currentPosition, temp_v0);
+        set_variable(enemyActor, currentPosition.x, temp_v0);
         if (does_script_exist_by_ref(enemyActor) != 0) {
             return 2;
         }

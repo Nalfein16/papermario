@@ -284,80 +284,91 @@ ApiStatus GetActorLevel(ScriptInstance* script, s32 isInitialCall) {
 //     return 0xFF;
 // }
 s32 PartnerDamageEnemy(ScriptInstance* script) {
-    s32 temp_s0_6;
-    s32 temp_s4;
-    s32 temp_v0;
-    s32* temp_s0;
-    s32* temp_s0_2;
-    s32* temp_s0_3;
-    s32* temp_s0_4;
-    s32* temp_s0_5;
-    u8 temp_v1;
-    Actor* temp_s3;
-    s32 phi_v0;
-    s32 phi_v0_2;
+    s32 labelPositions4;
+    s32 ptrReadPosCopy;
+    s32 damageDealt;
+    s32* ptrReadPos;
+    s32* labelIndices;
+    s32* labelIndices4;
+    s32* labelIndices8;
+    s32* labelPositions;
+    u8 currentAttackStatus;
+    Actor* enemyActor;
+    s32 setFlags1;
+    s32 setFlags1Helper;
 
-    temp_s0 = script->ptrReadPos;
-    temp_s3 = get_actor(script->owner1.enemyID);
-    temp_s4 = *temp_s0;
-    temp_s0_2 = temp_s0 + 4;
-    temp_s0_3 = temp_s0_2 + 4;
-    gBattleStatus.currentAttackElement = (s32) *temp_s0_2;
-    temp_s0_4 = temp_s0_3 + 4;
-    gBattleStatus.currentAttackEventSuppression = (s32) *temp_s0_3;
-    temp_s0_5 = temp_s0_4 + 4;
-    gBattleStatus.currentAttackStatus = (s32) *temp_s0_4;
-    gBattleStatus.currentAttackDamage = get_variable(script, *temp_s0_5);
+    ptrReadPos = script->ptrReadPos;
+    enemyActor = get_actor(script->owner1.enemyID);
+
+    ptrReadPosCopy = *ptrReadPos;
+    labelIndices = ptrReadPos + 4;
+    labelIndices4 = labelIndices + 4;
+    gBattleStatus.currentAttackElement = (s32) *labelIndices;
+    labelIndices8 = labelIndices4 + 4;
+    gBattleStatus.currentAttackEventSuppression = (s32) *labelIndices4;
+    labelPositions = labelIndices8 + 4;
+    gBattleStatus.currentAttackStatus = (s32) *labelIndices8;
+    gBattleStatus.currentAttackDamage = get_variable(script, *labelPositions);
     gBattleStatus.powerBounceCounter = 0;
-    temp_s0_6 = *(temp_s0_5 + 4);
-    if ((temp_s0_6 & 0x30) != 0x30) {
-        if ((temp_s0_6 & 0x10) != 0) {
-            phi_v0_2 = gBattleStatus.flags1 | 0x10;
+    labelPositions4 = *(labelPositions + 4);
+
+    if ((labelPositions4 & 0x30) != 0x30) {
+        if ((labelPositions4 & 0x10) != 0) {
+            setFlags1Helper = gBattleStatus.flags1 | 0x10;
             goto block_9;
         }
-        if ((temp_s0_6 & 0x20) != 0) {
-            phi_v0 = (gBattleStatus.flags1 & ~0x10) | 0x20;
+
+        if ((labelPositions4 & 0x20) != 0) {
+            setFlags1 = (gBattleStatus.flags1 & ~0x10) | 0x20;
         } else {
-            phi_v0_2 = gBattleStatus.flags1 & ~0x10;
+            setFlags1Helper = gBattleStatus.flags1 & ~0x10;
 block_9:
-            phi_v0 = phi_v0_2 & ~0x20;
+            setFlags1 = setFlags1Helper & ~0x20;
         }
+        
     } else {
-        phi_v0 = gBattleStatus.flags1 | 0x30;
+        setFlags1 = gBattleStatus.flags1 | 0x30;
     }
-    gBattleStatus.flags1 = phi_v0;
-    if ((temp_s0_6 & 0x40) != 0) {
+
+    gBattleStatus.flags1 = setFlags1;
+
+    if ((labelPositions4 & 0x40) != 0) {
         gBattleStatus.flags1 = (s32) (gBattleStatus.flags1 | 0x40);
     } else {
         gBattleStatus.flags1 = (s32) (gBattleStatus.flags1 & ~0x40);
     }
-    if ((temp_s0_6 & 0x200) != 0) {
+
+    if ((labelPositions4 & 0x200) != 0) {
         gBattleStatus.flags1 = (s32) (gBattleStatus.flags1 | 0x200);
     } else {
         gBattleStatus.flags1 = (s32) (gBattleStatus.flags1 & ~0x200);
     }
-    if ((temp_s0_6 & 0x80) != 0) {
+
+    if ((labelPositions4 & 0x80) != 0) {
         gBattleStatus.flags1 = (s32) (gBattleStatus.flags1 | 0x80);
     } else {
         gBattleStatus.flags1 = (s32) (gBattleStatus.flags1 & ~0x80);
     }
-    if ((temp_s0_6 & 0x800) != 0) {
+
+    if ((labelPositions4 & 0x800) != 0) {
         gBattleStatus.flags1 = (s32) (gBattleStatus.flags1 | 0x800);
     } else {
         gBattleStatus.flags1 = (s32) (gBattleStatus.flags1 & ~0x800);
     }
-    temp_v1 = gBattleStatus.currentAttackStatus;
-    gBattleStatus.currentTargetID = (u16) temp_s3->targetActorID;
-    gBattleStatus.statusChance = temp_v1;
-    gBattleStatus.currentTargetPart = (u8) temp_s3->targetPartIndex;
-    if ((temp_v1 & 0xFF) == 0xFF) {
+
+    currentAttackStatus = gBattleStatus.currentAttackStatus;
+    gBattleStatus.currentTargetID = (u16) enemyActor->targetActorID;
+    gBattleStatus.statusChance = currentAttackStatus;
+    gBattleStatus.currentTargetPart = (u8) enemyActor->targetPartIndex;
+    if ((currentAttackStatus & 0xFF) == 0xFF) {
         gBattleStatus.statusChance = 0U;
     }
     gBattleStatus.statusDuration = (s8) ((s32) (gBattleStatus.currentAttackStatus & 0xF00) >> 8);
-    // temp_v0 = calc_partner_damage_enemy(-0x801);
-    temp_v0 = calc_partner_damage_enemy(); // this is a void call... what's with the number?
-    if (temp_v0 >= 0) {
-        set_variable(script, temp_s4, temp_v0);
+
+    // damageDealt = calc_partner_damage_enemy(-0x801);
+    damageDealt = calc_partner_damage_enemy(); // this is a void call... what's with the number?
+    if (damageDealt >= 0) {
+        set_variable(script, ptrReadPosCopy, damageDealt);
         if (does_script_exist_by_ref(script) != 0) {
             return 2;
         }

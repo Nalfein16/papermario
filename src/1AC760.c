@@ -316,17 +316,16 @@ s32 PartnerDamageEnemy(ScriptInstance* script) { // a0, s2
     
     labelPositions4 = script->labelPositions[labelPositions + 4];
 
-    if ((labelPositions4 & 0x30) != 0x30) {
+    if ((labelPositions4 & 0x30) != 0x30) { // 1fbc
         if ((labelPositions4 & 0x10) != 0) {
             setFlags1Helper = gBattleStatus.flags1 | 0x10;
-            goto block_9;
+            setFlags1 = setFlags1Helper & ~0x20;
         }
 
         if ((labelPositions4 & 0x20) != 0) {
             setFlags1 = (gBattleStatus.flags1 & ~0x10) | 0x20;
         } else {
             setFlags1Helper = gBattleStatus.flags1 & ~0x10;
-block_9:
             setFlags1 = setFlags1Helper & ~0x20;
         }
         
@@ -376,8 +375,6 @@ block_9:
         if (does_script_exist_by_ref(script) != 0) {
             return 2;
         }
-        // Duplicate return node #28. Try simplifying control flow for better match
-        return 0xFF;
     }
     return 0xFF;
 }

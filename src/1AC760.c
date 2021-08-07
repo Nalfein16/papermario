@@ -283,30 +283,34 @@ ApiStatus GetActorLevel(ScriptInstance* script, s32 isInitialCall) {
 //     }
 //     return 0xFF;
 // }
-s32 PartnerDamageEnemy(ScriptInstance* script) { // s2
+s32 PartnerDamageEnemy(ScriptInstance* s2) { // s2
     s32* s0;
-    s32* s4; // my s3
-    Actor* enemyActor;
+    s32* s4;
+    Actor* s3; // enemyActor
     s32 labelPositions4;
     u8 currentAttackStatus;
     s32 setFlags1;
     s32 setFlags1Helper;
     s32 damageDealt;
 
-    s0 = script->ptrReadPos; // = 0xC(script)
-    enemyActor = get_actor(script->owner1.enemyID); // line 1f58
+    s0 = s2->ptrReadPos; // = 0xC(s2) // line 1f5c
+    s4 = s0[0];
+    s3 = get_actor(s2->owner1.enemyID); // line 1f58
+
+    // s0 = s2->ptrReadPos // line 1f5c
+    // v1 = s0[0]
+    // gBattleStatus.currentAttackElement = *v1
+    gBattleStatus.currentAttackElement = *(s4); // assignment at line 1f80
 
     s0 += 4;
-    s4 = s0;
-    *s0 = *s0 + 4;
-    gBattleStatus.currentAttackElement = script->labelIndices[0];
-    script->labelIndices[4] += 4;
-    script->labelIndices[8] += 4;
-    labelPositions4 = script->labelPositions[4];
+    s2->labelIndices[4] = *s0;
+    s0 += 4;
+    s2->labelIndices[8] = *s0;
+    labelPositions4 = s2->labelPositions[4];
 
-    gBattleStatus.currentAttackDamage = get_variable(script, script->labelPositions[0]);
-    gBattleStatus.currentAttackEventSuppression = script->labelIndices[4];
-    gBattleStatus.currentAttackStatus = script->labelIndices[8];
+    gBattleStatus.currentAttackDamage = get_variable(s2, s2->labelPositions[0]);
+    gBattleStatus.currentAttackEventSuppression = s2->labelIndices[4];
+    gBattleStatus.currentAttackStatus = s2->labelIndices[8];
     gBattleStatus.powerBounceCounter = 0;
 
     if ((labelPositions4 & 0x30) != 0x30) { // line 1fbc
@@ -353,9 +357,9 @@ s32 PartnerDamageEnemy(ScriptInstance* script) { // s2
     }
 
     currentAttackStatus = gBattleStatus.currentAttackStatus;
-    gBattleStatus.currentTargetID = (u16) enemyActor->targetActorID;
+    gBattleStatus.currentTargetID = (u16) s3->targetActorID;
     gBattleStatus.statusChance = currentAttackStatus;
-    gBattleStatus.currentTargetPart = (u8) enemyActor->targetPartIndex;
+    gBattleStatus.currentTargetPart = (u8) s3->targetPartIndex;
     if ((currentAttackStatus & 0xFF) == 0xFF) {
         gBattleStatus.statusChance = 0U;
     }
@@ -364,8 +368,8 @@ s32 PartnerDamageEnemy(ScriptInstance* script) { // s2
     // damageDealt = calc_partner_damage_enemy(-0x801);
     damageDealt = calc_partner_damage_enemy(); // this is a void call... what's with the number?
     if (damageDealt >= 0) {
-        set_variable(script, s4, damageDealt);
-        if (does_script_exist_by_ref(script) != 0) {
+        set_variable(s2, s4, damageDealt);
+        if (does_script_exist_by_ref(s2) != 0) {
             return 2;
         }
     }

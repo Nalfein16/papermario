@@ -287,9 +287,6 @@ s32 PartnerDamageEnemy(ScriptInstance* script) { // a0, s2
     s32* ptrReadPos; // s0
     s32 ptrReadPosCopy; // s4
     Actor* enemyActor;
-    s8 labelIndices;
-    s8 labelIndices4;
-    s8 labelIndices8;
     s8 labelPositions;
     s32 labelPositions4;
     u8 currentAttackStatus;
@@ -301,20 +298,17 @@ s32 PartnerDamageEnemy(ScriptInstance* script) { // a0, s2
     enemyActor = get_actor(script->owner1.enemyID);
     ptrReadPosCopy = *ptrReadPos; // 1f60
 
-    labelIndices = script->labelIndices[0];
-    labelIndices += 4;
-    labelIndices4 = script->labelIndices[labelIndices];
-    labelIndices += 4;
-    labelIndices8 = script->labelIndices[labelIndices];
+    script->labelIndices[0] += 4;
+    script->labelIndices[4] += 4;
+    script->labelIndices[8] += 4;
     labelPositions = script->labelPositions[0];
-
-    gBattleStatus.currentAttackElement = labelIndices;
-    gBattleStatus.currentAttackEventSuppression = labelIndices4;
-    gBattleStatus.currentAttackStatus = labelIndices8;
-    gBattleStatus.currentAttackDamage = get_variable(script, labelPositions);
-    gBattleStatus.powerBounceCounter = 0;
-    
     labelPositions4 = script->labelPositions[labelPositions + 4];
+
+    gBattleStatus.currentAttackElement = script->labelIndices[0];
+    gBattleStatus.currentAttackDamage = get_variable(script, script->labelPositions[0]);
+    gBattleStatus.currentAttackEventSuppression = script->labelIndices[4];
+    gBattleStatus.currentAttackStatus = script->labelIndices[8];
+    gBattleStatus.powerBounceCounter = 0;
 
     if ((labelPositions4 & 0x30) != 0x30) { // 1fbc
         if ((labelPositions4 & 0x10) != 0) {

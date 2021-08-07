@@ -283,34 +283,38 @@ ApiStatus GetActorLevel(ScriptInstance* script, s32 isInitialCall) {
 //     }
 //     return 0xFF;
 // }
-s32 PartnerDamageEnemy(ScriptInstance* script) {
-    s32 labelPositions4;
-    s32 ptrReadPosCopy;
-    s32 damageDealt;
-    s32* ptrReadPos;
-    s32* labelIndices;
-    s32* labelIndices4;
-    s32* labelIndices8;
-    s32* labelPositions;
-    u8 currentAttackStatus;
+s32 PartnerDamageEnemy(ScriptInstance* script) { // a0, s2
+    s32* ptrReadPos; // s0
+    s32 ptrReadPosCopy; // s4
     Actor* enemyActor;
+    s8 labelIndices;
+    s8 labelIndices4;
+    s8 labelIndices8;
+    s8 labelPositions;
+    s32 labelPositions4;
+    u8 currentAttackStatus;
     s32 setFlags1;
     s32 setFlags1Helper;
+    s32 damageDealt;
 
     ptrReadPos = script->ptrReadPos;
     enemyActor = get_actor(script->owner1.enemyID);
+    ptrReadPosCopy = *ptrReadPos; // 1f60
 
-    ptrReadPosCopy = *ptrReadPos;
-    labelIndices = ptrReadPos + 4;
-    labelIndices4 = labelIndices + 4;
-    gBattleStatus.currentAttackElement = (s32) *labelIndices;
-    labelIndices8 = labelIndices4 + 4;
-    gBattleStatus.currentAttackEventSuppression = (s32) *labelIndices4;
-    labelPositions = labelIndices8 + 4;
-    gBattleStatus.currentAttackStatus = (s32) *labelIndices8;
-    gBattleStatus.currentAttackDamage = get_variable(script, *labelPositions);
+    labelIndices = script->labelIndices[0];
+    labelIndices += 4;
+    labelIndices4 = script->labelIndices[labelIndices];
+    labelIndices += 4;
+    labelIndices8 = script->labelIndices[labelIndices];
+    labelPositions = script->labelPositions[0];
+
+    gBattleStatus.currentAttackElement = labelIndices;
+    gBattleStatus.currentAttackEventSuppression = labelIndices4;
+    gBattleStatus.currentAttackStatus = labelIndices8;
+    gBattleStatus.currentAttackDamage = get_variable(script, labelPositions);
     gBattleStatus.powerBounceCounter = 0;
-    labelPositions4 = *(labelPositions + 4);
+    
+    labelPositions4 = script->labelPositions[labelPositions + 4];
 
     if ((labelPositions4 & 0x30) != 0x30) {
         if ((labelPositions4 & 0x10) != 0) {

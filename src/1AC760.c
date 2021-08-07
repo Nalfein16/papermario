@@ -283,34 +283,33 @@ ApiStatus GetActorLevel(ScriptInstance* script, s32 isInitialCall) {
 //     }
 //     return 0xFF;
 // }
-s32 PartnerDamageEnemy(ScriptInstance* script) { // a0, s2
-    s32* ptrReadPos; // s0
-    s32 ptrReadPosCopy; // s4
+s32 PartnerDamageEnemy(ScriptInstance* script) { // s2
+    s32* s0;
+    s32* s4; // my s3
     Actor* enemyActor;
-    s8 labelPositions;
     s32 labelPositions4;
     u8 currentAttackStatus;
     s32 setFlags1;
     s32 setFlags1Helper;
     s32 damageDealt;
 
-    ptrReadPos = script->ptrReadPos;
-    enemyActor = get_actor(script->owner1.enemyID);
-    ptrReadPosCopy = *ptrReadPos; // 1f60
+    s0 = script->ptrReadPos; // = 0xC(script)
+    enemyActor = get_actor(script->owner1.enemyID); // line 1f58
 
-    script->labelIndices[0] += 4;
+    s0 += 4;
+    s4 = s0;
+    *s0 = *s0 + 4;
+    gBattleStatus.currentAttackElement = script->labelIndices[0];
     script->labelIndices[4] += 4;
     script->labelIndices[8] += 4;
-    labelPositions = script->labelPositions[0];
-    labelPositions4 = script->labelPositions[labelPositions + 4];
+    labelPositions4 = script->labelPositions[4];
 
-    gBattleStatus.currentAttackElement = script->labelIndices[0];
     gBattleStatus.currentAttackDamage = get_variable(script, script->labelPositions[0]);
     gBattleStatus.currentAttackEventSuppression = script->labelIndices[4];
     gBattleStatus.currentAttackStatus = script->labelIndices[8];
     gBattleStatus.powerBounceCounter = 0;
 
-    if ((labelPositions4 & 0x30) != 0x30) { // 1fbc
+    if ((labelPositions4 & 0x30) != 0x30) { // line 1fbc
         if ((labelPositions4 & 0x10) != 0) {
             setFlags1Helper = gBattleStatus.flags1 | 0x10;
             setFlags1 = setFlags1Helper & ~0x20;
@@ -365,7 +364,7 @@ s32 PartnerDamageEnemy(ScriptInstance* script) { // a0, s2
     // damageDealt = calc_partner_damage_enemy(-0x801);
     damageDealt = calc_partner_damage_enemy(); // this is a void call... what's with the number?
     if (damageDealt >= 0) {
-        set_variable(script, ptrReadPosCopy, damageDealt);
+        set_variable(script, s4, damageDealt);
         if (does_script_exist_by_ref(script) != 0) {
             return 2;
         }

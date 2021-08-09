@@ -294,18 +294,18 @@ s32 PartnerDamageEnemy(ScriptInstance* s2) { // s2
     s32 damageDealt;
 
     s0 = s2->ptrReadPos; // = 0xC(s2) // line 1f5c
-    s4 = s0[0];
     s3 = get_actor(s2->owner1.enemyID); // line 1f58
+    s4 = s0[0];
+    s0 += 1;
 
     // s0 = s2->ptrReadPos // line 1f5c
     // v1 = s0[0]
     // gBattleStatus.currentAttackElement = *v1
     gBattleStatus.currentAttackElement = *(s4); // assignment at line 1f80
-
-    s0 += 4;
-    s2->labelIndices[4] = *s0;
-    s0 += 4;
-    s2->labelIndices[8] = *s0;
+    
+    s2->labelIndices[0] = *s0;
+    s0 += 1;
+    s2->labelIndices[2] = *s0;
     labelPositions4 = s2->labelPositions[4];
 
     gBattleStatus.currentAttackDamage = get_variable(s2, s2->labelPositions[0]);

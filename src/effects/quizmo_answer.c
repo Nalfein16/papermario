@@ -2,13 +2,13 @@
 #include "effects_internal.h"
 
 // INCLUDE_ASM(s32, "effects/quizmo_answer", quizmo_answer_main);
-void quizmo_answer_main(void)
+void quizmo_answer_main(EffectBlueprint *sp14)
 {
     s32 sp24;
     s32 sp20;
     s32 sp1C;
     s32 sp18;
-    s32 sp14;
+    // EffectBlueprint *sp14;
     s32 sp10;
     EffectInstance *temp_v0;
     Gfx *a2_gMasterGfxPos;
@@ -18,12 +18,16 @@ void quizmo_answer_main(void)
     s32 var_v0;
     s32 var_v1;
 
-    sp14 = 0x50;                                                     // li v0, 0x50
-    sp10 = 0;                                                        //
-    sp18 = 0;                                                        // one of these five corresponds to:
-    sp1C = 0;                                                        // 0x10       0x18
-    sp20 = 0;                                                        // 0x1c       0x20
-    sp24 = 0;                                                        // 0x24
+    sp14->unk_00 = 0x50; // li v0, 0x50
+    // sp10 = 0;            //
+    // sp18 = 0;            // one of these five corresponds to:
+    // sp1C = 0;            // 0x10       0x18
+    // sp20 = 0;            // 0x1c       0x20
+    // sp24 = 0;            // 0x24
+    // temp_v0 = sp14;
+    sp14->effectID = 0;
+    sp14->init = 0;
+
     temp_v0 = shim_create_effect_instance((EffectBlueprint *)&sp14); // jal shim_create_effect_instance
 
     temp_a1_2->words.w0 = 0xDB060024; // lui a0 0xdb06; ori a0 a0 0x24

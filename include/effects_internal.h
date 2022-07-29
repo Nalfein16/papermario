@@ -108,7 +108,7 @@ FX_MAIN(floating_rock_main);
 FX_MAIN(chomp_drop_main);
 FX_MAIN(quizmo_stage_main);
 FX_MAIN(radiating_energy_orb_main);
-FX_MAIN(quizmo_answer_main);
+void quizmo_answer_main();
 FX_MAIN(motion_blur_flame_main);
 FX_MAIN(energy_orb_wave_main);
 FX_MAIN(merlin_house_stars_main);

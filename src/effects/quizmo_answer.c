@@ -2,13 +2,13 @@
 #include "effects_internal.h"
 
 // INCLUDE_ASM(s32, "effects/quizmo_answer", quizmo_answer_main);
-void quizmo_answer_main(void)
+void quizmo_answer_main(Gfx *temp_v0_2)
 {
     EffectBlueprint bp;
     EffectInstance *effect;
     Gfx *a2_gMasterGfxPos;
     Gfx *temp_a1_2;
-    Gfx *temp_v0_2;
+    // Gfx *temp_v0_2;
     Gfx *temp_v0_3;
     s32 var_v0;
     s32 var_v1;
@@ -29,20 +29,20 @@ void quizmo_answer_main(void)
 
     effect->data = NULL; // sw zero, 0xc(t3)
 
-    temp_a1_2 = a2_gMasterGfxPos + 8; // temp_a1_2 = &(a2_gMasterGfxPos->dma); ???
-    gMasterGfxPos = temp_a1_2;        // ???
+    temp_a1_2 = a2_gMasterGfxPos + 8; // move v1, a1; addiu a1, a1, 8 ... temp_a1_2 = &(a2_gMasterGfxPos->dma); ???
+    gMasterGfxPos = temp_a1_2;        // sw a1, 0(a2)
 
     bp.effectID = 0xE7000000; // lui v0, 0xe700
 
-    a2_gMasterGfxPos->words.w1 = NULL; // sw zero, 4(v1)
-    gMasterGfxPos = temp_a1_2 + 8;     // ???
-    temp_a1_2->words.w1 = (u32)(effect->graphics->data + 0x80000000);
-    if (temp_a1_2 == NULL) // bnez s0    ...what should I be comparing to zero???
+    a2_gMasterGfxPos->words.w1 = NULL;                                // sw zero, 4(v1)
+    gMasterGfxPos = temp_a1_2 + 8;                                    // addiu v0, a1, 8; sw v0, 0(a2)
+    temp_a1_2->words.w1 = (u32)(effect->graphics->data + 0x80000000); // lw v0, 0x1c(v1); lui v1, 0x8000; addu v0, v0, v1
+    if (temp_v0_2 == NULL)                                            // bnez s0
     {
-        gMasterGfxPos = temp_a1_2 + 0x10;
-        temp_a1_2->force_structure_alignment = 0xDE000000; // temporarily unk8 -> force_structure_alignment
-        var_v0 = 0x09000400;
         var_v1 = 0xFF4040E6;
+        var_v0 = 0x09000400;
+        gMasterGfxPos = temp_a1_2 + 0x10;                  // ???
+        temp_a1_2->force_structure_alignment = 0xDE000000; // temporarily unk8 -> force_structure_alignment
     }
     else
     {
@@ -78,5 +78,5 @@ void quizmo_answer_main(void)
     temp_v0_3->words.w1 = 0;          // temp_v0_3->unk24 -> words.w1
     shim_remove_effect(effect);
 
-    return 0;
+    return NULL;
 }

@@ -30,22 +30,25 @@ void quizmo_answer_main(Gfx *gfxArg)
     // ALL ABOVE IS CORRECT AS OF 7/29 @ 4:55PM EST
     ////////////////////////
 
-    var_v0 = 0xdb060024;
-    effect->numParts = var_v0; // lui a0 0xdb06; ori a0 a0 0x24
+    // what is a0 here???
+    var_v0 = 0xdb060024; // lui a0 0xdb06; ori a0 a0 0x24
 
-    gMasterGfxPos = gMasterGfxPos; // lui a2 %hi(gMasterGfxPos); addiu a2, a2, %lo(gMasterGfxPos)
+    effect->numParts = var_v0;
+
+    // gMasterGfxPos = gMasterGfxPos; // lui a2 %hi(gMasterGfxPos); addiu a2, a2, %lo(gMasterGfxPos)
 
     effect->data = NULL; // sw zero, 0xc(t3)
 
-    temp_a1_2 = gMasterGfxPos->dma.cmd + 8; // move v1, a1; addiu a1, a1, 8 ... temp_a1_2 = &(a2_gMasterGfxPos->dma); ???
-    gMasterGfxPos = temp_a1_2;              // sw a1, 0(a2)
+    temp_a1_2 = &(gMasterGfxPos->dma) + 8; // move v1, a1; addiu a1, a1, 8 ... temp_a1_2 = &(a2_gMasterGfxPos->dma); ???
+    gMasterGfxPos = temp_a1_2;             // sw a1, 0(a2)
 
     bp.effectID = 0xE7000000; // lui v0, 0xe700
 
     gMasterGfxPos->words.w1 = NULL;                                   // sw zero, 4(v1)
     gMasterGfxPos = temp_a1_2 + 8;                                    // addiu v0, a1, 8; sw v0, 0(a2)
     temp_a1_2->words.w1 = (u32)(effect->graphics->data + 0x80000000); // lw v0, 0x1c(v1); lui v1, 0x8000; addu v0, v0, v1
-    if (gfxArg == NULL)                                               // bnez s0
+
+    if (gfxArg == NULL) // bnez s0
     {
         var_v1 = 0xFF4040E6;
         var_v0 = 0x09000400;

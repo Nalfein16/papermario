@@ -2,15 +2,10 @@
 #include "effects_internal.h"
 
 // INCLUDE_ASM(s32, "effects/quizmo_answer", quizmo_answer_main);
-void quizmo_answer_main(EffectBlueprint *sp14)
+void quizmo_answer_main(void)
 {
-    s32 sp24;
-    s32 sp20;
-    s32 sp1C;
-    s32 sp18;
-    // EffectBlueprint *sp14;
-    s32 sp10;
-    EffectInstance *temp_v0;
+    EffectBlueprint bp;
+    EffectInstance *effect;
     Gfx *a2_gMasterGfxPos;
     Gfx *temp_a1_2;
     Gfx *temp_v0_2;
@@ -18,28 +13,31 @@ void quizmo_answer_main(EffectBlueprint *sp14)
     s32 var_v0;
     s32 var_v1;
 
-    sp14->unk_00 = 0x50; // li v0, 0x50
-    // sp10 = 0;            //
-    // sp18 = 0;            // one of these five corresponds to:
-    // sp1C = 0;            // 0x10       0x18
-    // sp20 = 0;            // 0x1c       0x20
-    // sp24 = 0;            // 0x24
-    // temp_v0 = sp14;
-    sp14->effectID = 0;
-    sp14->init = 0;
+    // v0 (bp) is located at 0x10(sp)
 
-    temp_v0 = shim_create_effect_instance((EffectBlueprint *)&sp14); // jal shim_create_effect_instance
+    bp.unk_00 = NULL;                   // sw zero, 0x10(sp)
+    bp.init = NULL;                     // sw zero, 0x18(sp)
+    bp.update = NULL;                   // sw zero, 0x1c(sp)
+    bp.renderWorld = NULL;              // sw zero, 0x20(sp)
+    bp.unk_14 = NULL;                   // sw zero, 0x24(sp)
+    bp.effectID = EFFECT_QUIZMO_ANSWER; // sw v0, 0x14(sp)
 
-    temp_a1_2->words.w0 = 0xDB060024; // lui a0 0xdb06; ori a0 a0 0x24
+    effect = shim_create_effect_instance(&bp); // jal shim_create_effect_instance
+    effect->numParts = 0xDB060024;             // lui a0 0xdb06; ori a0 a0 0x24
+
     a2_gMasterGfxPos = gMasterGfxPos; // lui a2 %hi(gMasterGfxPos); addiu a2, a2, %lo(gMasterGfxPos)
-    temp_v0->data = NULL;
-    temp_a1_2 = a2_gMasterGfxPos + 8;
-    gMasterGfxPos = temp_a1_2;
-    a2_gMasterGfxPos->words.w0 = 0xE7000000;
-    a2_gMasterGfxPos->words.w1 = 0; // "= 0" is right; should be stored into 0xC(t3)
-    gMasterGfxPos = temp_a1_2 + 8;
-    temp_a1_2->words.w1 = (u32)(temp_v0->graphics->data + 0x80000000);
-    if (temp_a1_2 == 0) // bnez s0    ...what should I be comparing to zero???
+
+    effect->data = NULL; // sw zero, 0xc(t3)
+
+    temp_a1_2 = a2_gMasterGfxPos + 8; // temp_a1_2 = &(a2_gMasterGfxPos->dma); ???
+    gMasterGfxPos = temp_a1_2;        // ???
+
+    bp.effectID = 0xE7000000; // lui v0, 0xe700
+
+    a2_gMasterGfxPos->words.w1 = NULL; // sw zero, 4(v1)
+    gMasterGfxPos = temp_a1_2 + 8;     // ???
+    temp_a1_2->words.w1 = (u32)(effect->graphics->data + 0x80000000);
+    if (temp_a1_2 == NULL) // bnez s0    ...what should I be comparing to zero???
     {
         gMasterGfxPos = temp_a1_2 + 0x10;
         temp_a1_2->force_structure_alignment = 0xDE000000; // temporarily unk8 -> force_structure_alignment
@@ -57,7 +55,8 @@ void quizmo_answer_main(EffectBlueprint *sp14)
     gMasterGfxPos = temp_a1_2 + 0x18;
     temp_a1_2->words.w1 = 0xFA000000; // temp unk10 -> words.w1
     temp_a1_2->words.w0 = var_v1;     // temp unk14 -> words.w0
-    temp_v0_2 = gMasterGfxPos;
+
+    temp_v0_2 = gMasterGfxPos; // temp_v0_2 = (a2_gMasterGfxPos + 0x20) ???
     temp_v0_3 = temp_v0_2 + 8;
     gMasterGfxPos = temp_v0_3;
     temp_v0_2->words.w0 = 0xED000000;
@@ -77,7 +76,7 @@ void quizmo_answer_main(EffectBlueprint *sp14)
     gMasterGfxPos = temp_v0_3 + 0x28;
     temp_v0_3->words.w0 = 0xDB060000; // temp_v0_3->unk20 -> words.w0
     temp_v0_3->words.w1 = 0;          // temp_v0_3->unk24 -> words.w1
-    shim_remove_effect(temp_v0);
+    shim_remove_effect(effect);
 
     return 0;
 }

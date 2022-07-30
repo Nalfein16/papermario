@@ -8,12 +8,12 @@ void quizmo_answer_main(Gfx *gfxArg)
     EffectInstance *effect;
     Gfx *v1;
     Gfx *temp_v0_3;
-    s32 t0;
+    s32 a0;
     s32 var_v1;
 
     // bp is located at 0x10(sp)
     // v0 is EFFECT_QUIZMO_ANSWER (0x50)
-    // t0 is the Gfx argument of this function (gfxArg)
+    // a0 is the Gfx argument of this function (gfxArg)
     // a1 is 0(a2)
     // a2 is gMasterGfxPos
 
@@ -30,35 +30,44 @@ void quizmo_answer_main(Gfx *gfxArg)
     // ALL ABOVE IS CORRECT AS OF 7/29 @ 4:55PM EST
     ////////////////////////
 
-    t0 = 0xdb060024; // lui a0 0xdb06; ori a0 a0 0x24
+    // a0 = 0xdb060024
+    // a1 = 0(a2)
+    // a2 = gMasterGfxPos
+    // t3 = v0 (which is EFFECT_QUIZMO_ANSWER, from last section)
+    // v0 = 0xe7000000 (after t3 assignment!)
+    // v1 = a1
+    // v1 = 0x10(t3) (EFFECT_THROW_SPINY???)
+
+    effect->flags = 0xdb060024; // lui a0 0xdb06; ori a0 a0 0x24
 
     // first reference of gMasterGfxPos:
     // lui a2, %hi(gMasterGfxPos); addiu a2, %lo(gMasterGfxPos)
 
-    effect->data = NULL; // sw zero, 0xc(t3)
+    // move t3, v0
+    // lw a1, 0(a2)
 
-    // move v1, a1
-    // addiu a1, a1, 8
-    // sw a1, 0(a2)
+    bp.effectID = 0xE7000000; // lui v0, 0xe700
+    effect->data = NULL;      // sw zero, 0xc(t3)
 
-    v1 = &(gMasterGfxPos->dma) + 8;
+    gMasterGfxPos->dma.cmd = gMasterGfxPos->words.w0; // move v1, a1; addiu a1, a1, 8; sw a1, 0(a2)
 
-    // sw v0, 0(v1)
+    v1 = &(gMasterGfxPos->dma); // sw v0, 0(v1)
 
-    gMasterGfxPos->words.w1 = NULL; // sw zero, 4(v1)
-    gMasterGfxPos->words.w1 = t0;   // sw a0, 0(a1)
-    bp.effectID = 0xE7000000;       // lui v0, 0xe700
+    gMasterGfxPos->words.w1 = NULL;          // sw zero, 4(v1)
+    gMasterGfxPos->words.w1 = effect->flags; // sw a0, 0(a1)
 
-    // lw v1, 0x10(t3)
+    a0 = EFFECT_THROW_SPINY; // lw v1, 0x10(t3)
 
     gMasterGfxPos = v1 + 8; // addiu v0, a1, 8; sw v0, 0(a2)
 
     v1->words.w1 = (u32)(effect->graphics->data + 0x80000000); // lw v0, 0x1c(v1); lui v1, 0x8000; addu v0, v0, v1
 
+    effect->effectIndex = bp.effectID; // sw v0, 4(a1)
+
     if (gfxArg == NULL) // bnez s0
     {
         var_v1 = 0xFF4040E6;
-        t0 = 0x09000400;
+        a0 = 0x09000400;
         gMasterGfxPos = v1 + 0x10;                  // ???
         v1->force_structure_alignment = 0xDE000000; // temporarily unk8 -> force_structure_alignment
     }
@@ -67,9 +76,9 @@ void quizmo_answer_main(Gfx *gfxArg)
         var_v1 = 0x5050FFE6;
         gMasterGfxPos = v1 + 0x10;
         v1->force_structure_alignment = 0xDE000000;
-        t0 = 0x090004A8;
+        a0 = 0x090004A8;
     }
-    v1->dma.cmd = t0; // temp unkC -> dma.cmd?
+    v1->dma.cmd = a0; // temp unkC -> dma.cmd?
     gMasterGfxPos = v1 + 0x18;
     v1->dma.par = 0xFA000000; // temp unk10 -> dma.par?
     v1->dma.len = var_v1;     // temp unk14 -> dma.len?

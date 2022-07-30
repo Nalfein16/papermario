@@ -6,9 +6,9 @@ void quizmo_answer_main(Gfx *gfxArg)
 {
     EffectBlueprint bp;
     EffectInstance *effect;
-    Gfx *temp_a1_2;
+    Gfx *v1;
     Gfx *temp_v0_3;
-    s32 var_v0;
+    s32 a0;
     s32 var_v1;
 
     // bp is located at 0x10(sp)
@@ -30,42 +30,40 @@ void quizmo_answer_main(Gfx *gfxArg)
     // ALL ABOVE IS CORRECT AS OF 7/29 @ 4:55PM EST
     ////////////////////////
 
-    // what is a0 here???
-    var_v0 = 0xdb060024; // lui a0 0xdb06; ori a0 a0 0x24
-
-    effect->numParts = var_v0;
+    a0 = 0xdb060024; // lui a0 0xdb06; ori a0 a0 0x24
 
     // gMasterGfxPos = gMasterGfxPos; // lui a2 %hi(gMasterGfxPos); addiu a2, a2, %lo(gMasterGfxPos)
 
     effect->data = NULL; // sw zero, 0xc(t3)
 
-    temp_a1_2 = &(gMasterGfxPos->dma) + 8; // move v1, a1; addiu a1, a1, 8 ... temp_a1_2 = &(a2_gMasterGfxPos->dma); ???
-    gMasterGfxPos = temp_a1_2;             // sw a1, 0(a2)
+    v1 = &(gMasterGfxPos->dma) + 8; // move v1, a1; addiu a1, a1, 8 ... v1 = &(a2_gMasterGfxPos->dma); ???
+    // gMasterGfxPos = v1;             // sw a1, 0(a2)
 
-    bp.effectID = 0xE7000000; // lui v0, 0xe700
+    gMasterGfxPos->words.w1 = a0; // sw a0, 0(a1)
+    bp.effectID = 0xE7000000;     // lui v0, 0xe700
 
-    gMasterGfxPos->words.w1 = NULL;                                   // sw zero, 4(v1)
-    gMasterGfxPos = temp_a1_2 + 8;                                    // addiu v0, a1, 8; sw v0, 0(a2)
-    temp_a1_2->words.w1 = (u32)(effect->graphics->data + 0x80000000); // lw v0, 0x1c(v1); lui v1, 0x8000; addu v0, v0, v1
+    gMasterGfxPos->words.w1 = NULL;                            // sw zero, 4(v1)
+    gMasterGfxPos = v1 + 8;                                    // addiu v0, a1, 8; sw v0, 0(a2)
+    v1->words.w1 = (u32)(effect->graphics->data + 0x80000000); // lw v0, 0x1c(v1); lui v1, 0x8000; addu v0, v0, v1
 
     if (gfxArg == NULL) // bnez s0
     {
         var_v1 = 0xFF4040E6;
-        var_v0 = 0x09000400;
-        gMasterGfxPos = temp_a1_2 + 0x10;                  // ???
-        temp_a1_2->force_structure_alignment = 0xDE000000; // temporarily unk8 -> force_structure_alignment
+        a0 = 0x09000400;
+        gMasterGfxPos = v1 + 0x10;                  // ???
+        v1->force_structure_alignment = 0xDE000000; // temporarily unk8 -> force_structure_alignment
     }
     else
     {
         var_v1 = 0x5050FFE6;
-        gMasterGfxPos = temp_a1_2 + 0x10;
-        temp_a1_2->force_structure_alignment = 0xDE000000;
-        var_v0 = 0x090004A8;
+        gMasterGfxPos = v1 + 0x10;
+        v1->force_structure_alignment = 0xDE000000;
+        a0 = 0x090004A8;
     }
-    temp_a1_2->dma.cmd = var_v0; // temp unkC -> dma.cmd?
-    gMasterGfxPos = temp_a1_2 + 0x18;
-    temp_a1_2->dma.par = 0xFA000000; // temp unk10 -> dma.par?
-    temp_a1_2->dma.len = var_v1;     // temp unk14 -> dma.len?
+    v1->dma.cmd = a0; // temp unkC -> dma.cmd?
+    gMasterGfxPos = v1 + 0x18;
+    v1->dma.par = 0xFA000000; // temp unk10 -> dma.par?
+    v1->dma.len = var_v1;     // temp unk14 -> dma.len?
 
     gfxArg = gMasterGfxPos; // temp_v0_2 = (a2_gMasterGfxPos + 0x20) ???
     temp_v0_3 = gfxArg + 8;

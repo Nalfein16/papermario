@@ -11,6 +11,7 @@ void quizmo_answer_main(Gfx *gfxArg)
     s32 a0;
     s32 var_v1;
 
+    // gfxArg is located at 0x28(sp)
     // bp is located at 0x10(sp)
     // v0 is EFFECT_QUIZMO_ANSWER (0x50)
     // a0 is the Gfx argument of this function (gfxArg)
@@ -40,45 +41,62 @@ void quizmo_answer_main(Gfx *gfxArg)
 
     effect->flags = 0xdb060024; // lui a0 0xdb06; ori a0 a0 0x24
 
-    // first reference of gMasterGfxPos:
-    // lui a2, %hi(gMasterGfxPos); addiu a2, %lo(gMasterGfxPos)
+    var_v1 = gMasterGfxPos->words.w0; // lui a2, %hi(gMasterGfxPos); addiu a2, %lo(gMasterGfxPos); lw a1, 0(a2)
 
     // move t3, v0
-    // lw a1, 0(a2)
 
     bp.effectID = 0xE7000000; // lui v0, 0xe700
     effect->data = NULL;      // sw zero, 0xc(t3)
 
-    gMasterGfxPos->dma.cmd = gMasterGfxPos->words.w0; // move v1, a1; addiu a1, a1, 8; sw a1, 0(a2)
+    gMasterGfxPos->words.w0 = gMasterGfxPos->words.w1; // move v1, a1; addiu a1, a1, 8; sw a1, 0(a2)
 
-    v1 = &(gMasterGfxPos->dma); // sw v0, 0(v1)
-
-    gMasterGfxPos->words.w1 = NULL;          // sw zero, 4(v1)
-    gMasterGfxPos->words.w1 = effect->flags; // sw a0, 0(a1)
+    gMasterGfxPos->words.w1 = NULL; // sw zero, 4(v1)
+    v1 = &(gMasterGfxPos->dma);     // sw v0, 0(v1)
+    // gMasterGfxPos->words.w1 = effect->flags; // sw a0, 0(a1)
 
     a0 = EFFECT_THROW_SPINY; // lw v1, 0x10(t3)
 
     gMasterGfxPos = v1 + 8; // addiu v0, a1, 8; sw v0, 0(a2)
 
-    v1->words.w1 = (u32)(effect->graphics->data + 0x80000000); // lw v0, 0x1c(v1); lui v1, 0x8000; addu v0, v0, v1
-
     effect->effectIndex = bp.effectID; // sw v0, 4(a1)
+
+    v1->words.w1 = (u32)(effect->graphics->data + 0x80000000); // lw v0, 0x1c(v1); lui v1, 0x8000; addu v0, v0, v1
 
     if (gfxArg == NULL) // bnez s0
     {
-        var_v1 = 0xFF4040E6;
-        a0 = 0x09000400;
-        gMasterGfxPos = v1 + 0x10;                  // ???
-        v1->force_structure_alignment = 0xDE000000; // temporarily unk8 -> force_structure_alignment
+        var_v1 = 0xFF4040E6;                        // lui v1, 0xff40; ori v1, v1, 0x40e6
+        gMasterGfxPos = v1 + 0x10;                  // addiu v0, a1, 0x10; sw v0, 0(a2)
+        a0 = 0x09000400;                            // lui v0, 0x900; addiu v0, v0, 0x4a8
+        v1->force_structure_alignment = 0xDE000000; // lui v0, 0xde00; sw v0, 8(a1)
     }
     else
     {
-        var_v1 = 0x5050FFE6;
-        gMasterGfxPos = v1 + 0x10;
-        v1->force_structure_alignment = 0xDE000000;
-        a0 = 0x090004A8;
+        var_v1 = 0x5050FFE6;                        // lui v1, 0x5050; ori v1, v1, 0xffe6
+        gMasterGfxPos = v1 + 0x10;                  // addiu v0, a1, 0x10; sw v0, 0(a2)
+        a0 = 0x090004A8;                            // lui v0, 0x900; addiu v0, v0, 0x4a8
+        v1->force_structure_alignment = 0xDE000000; // lui v0, 0xde00; sw v0, 8(a1)
     }
-    v1->dma.cmd = a0; // temp unkC -> dma.cmd?
+
+    v1->dma.cmd = a0; // sw v0, 4(a1)
+
+    // sw v0, 0xc(a1)
+    // addiu v0, a1, 0x18
+    // sw v0, 0(a2)
+    // lui v0, 0xfa00
+    // sw v0, 0x10(a1)
+    // sw v1, 0x14(a1)
+    // lui a3, 0x50; ori a3, a3, 0x3c0
+    // lui t1, 0xe430; ori t1, t1, 0x230
+    // lui t0, 0x20; ori t0, t0, 0x130
+    // lui t2, 0x400; ori t2, t2, 0x400
+    // lui a1, %hi(gMasterGfxPos)
+    // addiu a1, a1, %lo(gMasterGfxPos)
+    // move a0, t3
+    // lw v0, 0(a1)
+    // lui v1, 0xed00
+    // move a2, v0
+    // ...(left off at 120)
+
     gMasterGfxPos = v1 + 0x18;
     v1->dma.par = 0xFA000000; // temp unk10 -> dma.par?
     v1->dma.len = var_v1;     // temp unk14 -> dma.len?

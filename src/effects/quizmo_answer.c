@@ -30,6 +30,34 @@ void quizmo_answer_main(Gfx *gfxArg)
     // ALL ABOVE IS CORRECT AS OF 7/29 @ 4:55PM EST
     ////////////////////////
 
+    // GFX:
+    //  0: words:
+    //      0: w0
+    //      4: w1
+    //  8: dma:
+    //      8: cmd
+    //      C: par
+    //      10: len
+    //      14: addr
+    //  18: tri:
+    //      18: cmd
+    //      1C: pad
+    //      20: tri:
+    //          20: flag
+    //          21: v[3]
+    //  24: line:
+    //      24: cmd
+    //      28: pad
+    //      2C: line:
+    //          2C: flag
+    //          2D: v[3]
+    //  30: popmtx:
+    //      30: cmd
+    //      34: pad1
+    //      38: pad2
+    //      3C: param
+    //  3D: segment
+
     // a0 = 0xdb060024
     int_1 = 0xdb060024; // lui a0 0xdb06; ori a0 a0 0x24
 
@@ -40,14 +68,20 @@ void quizmo_answer_main(Gfx *gfxArg)
     // t3 = v0 (which is 0x50, EFFECT_QUIZMO_ANSWER, from last section)
     effect->data = NULL; // move t3, v0; sw zero, 0xc(t3)
 
-    gfx_1 = &(gMasterGfxPos->dma); // sw v0, 0(v1)
-    // gMasterGfxPos->words.w0 += 0x8;
-    gMasterGfxPos->words.w0 = gMasterGfxPos->dma.par;
+    gfx_1 = gMasterGfxPos; // move v1, a1
+    gMasterGfxPos += 0x1;
+
+    // gMasterGfxPos->words.w0 += 0x8; // addiu a1, a1, 8; sw a1, 0(a2)
+    gMasterGfxPos->words.w0 = int_2;
 
     // v0 = 0xe7000000
     gMasterGfxPos->words.w0 = 0xE7000000; // lui v0, 0xe700; sw v0, 0(v1)
     gMasterGfxPos->words.w1 = NULL;       // sw zero, 4(v1)
-    gfx_1->words.w0 = int_1;              // sw a0, 0(a1)
+    gfx_1->words.w0 = 0xdb060024;         // sw a0, 0(a1)
+
+    //////////////////
+    // WORKING ON ABOVE FOR MATCHING
+    //////////////////
 
     // v1 = 0x10(t3) (EFFECT_THROW_SPINY???)
     int_1 = EFFECT_THROW_SPINY; // lw v1, 0x10(t3)

@@ -40,21 +40,19 @@ void quizmo_answer_main(Gfx *gfxArg)
     // t3 = v0 (which is 0x50, EFFECT_QUIZMO_ANSWER, from last section)
     effect->data = NULL; // move t3, v0; sw zero, 0xc(t3)
 
-    // v1 = a1
-    gMasterGfxPos->words.w0 = gMasterGfxPos->words.w1; // move v1, a1; addiu a1, a1, 8; sw a1, 0(a2)
+    gfx_1 = &(gMasterGfxPos->dma); // sw v0, 0(v1)
+    // gMasterGfxPos->words.w0 += 0x8;
+    gMasterGfxPos->words.w0 = gMasterGfxPos->dma.par;
 
-    // v0 = 0xe7000000 (after t3 assignment!)
+    // v0 = 0xe7000000
     gMasterGfxPos->words.w0 = 0xE7000000; // lui v0, 0xe700; sw v0, 0(v1)
     gMasterGfxPos->words.w1 = NULL;       // sw zero, 4(v1)
-    gfx_1 = &(gMasterGfxPos->dma);        // sw v0, 0(v1)
-    gMasterGfxPos->words.w0 = int_1;      // sw a0, 0(a1)
+    gfx_1->words.w0 = int_1;              // sw a0, 0(a1)
 
     // v1 = 0x10(t3) (EFFECT_THROW_SPINY???)
     int_1 = EFFECT_THROW_SPINY; // lw v1, 0x10(t3)
 
     gMasterGfxPos = gfx_1 + 8; // addiu v0, a1, 8; sw v0, 0(a2)
-
-    effect->effectIndex = blueprint.effectID; // sw v0, 4(a1)
 
     gfx_1->words.w1 = (u32)(effect->graphics->data + 0x80000000); // lw v0, 0x1c(v1); lui v1, 0x8000; addu v0, v0, v1
 

@@ -2,34 +2,159 @@
 #include "effects_internal.h"
 
 // INCLUDE_ASM(s32, "effects/quizmo_answer", quizmo_answer_main);
-void quizmo_answer_main(Gfx *gfxArg)
+void quizmo_answer_main(s32 arg0)
 {
     EffectBlueprint blueprint;
     EffectInstance *effect;
-    Gfx *gfx_1;
-    Gfx *gfx_2;
-    s32 int_1;
-    s32 int_2;
-
-    // gfxArg is located at 0x28(sp)
-    // blueprint is located at 0x10(sp)
-    // s0 = a0 (which is gfxArg)
 
     blueprint.unk_00 = NULL;      // sw zero, 0x10(sp)
     blueprint.init = NULL;        // sw zero, 0x18(sp)
     blueprint.update = NULL;      // sw zero, 0x1c(sp)
     blueprint.renderWorld = NULL; // sw zero, 0x20(sp)
     blueprint.unk_14 = NULL;      // sw zero, 0x24(sp)
+    blueprint.effectID = EFFECT_QUIZMO_ANSWER;
+    effect = shim_create_effect_instance(&blueprint);
+    effect->data = 0;
 
-    // v0 is EFFECT_QUIZMO_ANSWER (0x50)
-    blueprint.effectID = EFFECT_QUIZMO_ANSWER; // sw v0, 0x14(sp)
+    gDPPipeSync(gMasterGfxPos++);
 
-    effect = shim_create_effect_instance(&blueprint); // jal shim_create_effect_instance
+    gSPSegment(gMasterGfxPos++, 0x09, VIRTUAL_TO_PHYSICAL(effect->graphics->data));
 
-    ////////////////////////
-    // ALL ABOVE IS CORRECT AS OF 7/29 @ 4:55PM EST
-    ////////////////////////
+    if (arg0 == 0)
+    {
+        // ORIGINAL
+        // gMasterGfxPos = temp_a1_2 + 0x10;
+        // temp_a1_2->dma.cmd = 0xDE000000;
+        // var_v0 = 0x09000400;
+        // var_v1 = 0xFF4040E6;
 
+        // FROM BLOCK AFTER
+        // temp_a1_2->dma.par = 0x09000400;
+        // gMasterGfxPos = temp_a1_2 + 0x18;
+        gSPDisplayList(gMasterGfxPos++, 0x00000000);
+        // gDPSetPrimColor(gMasterGfxPos++, 0, 0, 255, 64, 64, 230);
+        gDPNoOpTag(gMasterGfxPos++, 0x09000400);
+
+        // temp_a1_2->dma.len = 0xFA000000;
+        // temp_a1_2->dma.addr = 0xFF4040E6;
+        // temp_v0_2 = gMasterGfxPos;
+        // temp_v0_3 = temp_v0_2 + 8;
+    }
+    else
+    {
+        // ORIGINAL
+        // gMasterGfxPos = temp_a1_2 + 0x10;
+        // temp_a1_2->dma.cmd = 0xDE000000;
+        // var_v0 = 0x090004A8;
+        // var_v1 = 0x5050FFE6;
+
+        // FROM BLOCK AFTER
+        // temp_a1_2->dma.par = 0x090004A8;
+        // gMasterGfxPos = temp_a1_2 + 0x18;
+        // gSPDisplayList(gMasterGfxPos++, 0x00000000);
+        // gDPSetPrimColor(gMasterGfxPos++, 0, 0, 80, 80, 255, 230);
+        // gDPNoOpTag(gMasterGfxPos++, 0x090004A8);
+
+        // temp_a1_2->dma.len = 0xFA000000;
+        // temp_a1_2->dma.addr = 0x5050FFE6;
+        // temp_v0_2 = gMasterGfxPos;
+        // temp_v0_3 = temp_v0_2 + 8;
+    }
+
+    // temp_a1_2->dma.par = var_v0;
+    // gMasterGfxPos = temp_a1_2 + 0x18;
+    // temp_a1_2->dma.len = 0xFA000000;
+    // temp_a1_2->dma.addr = var_v1;
+    // temp_v0_2 = gMasterGfxPos;
+    // temp_v0_3 = temp_v0_2 + 8;
+
+    gDPSetScissor(gMasterGfxPos++, G_SC_NON_INTERLACE, 0, 0, 320, 240);
+
+    gTexRect(gMasterGfxPos++, 0x0200, 0x0130, 0x0300, 0x0230, G_TX_RENDERTILE);
+
+    gDPHalf1(gMasterGfxPos++, 0x00000400);
+
+    gDPHalf2(gMasterGfxPos++, 0x04000400);
+
+    gDPPipeSync(gMasterGfxPos++);
+
+    gSPSegment(gMasterGfxPos++, 0x00, VIRTUAL_TO_PHYSICAL(effect->graphics->data));
+
+    shim_remove_effect(effect);
+}
+
+// void quizmo_answer_main(void)
+// {
+//     s32 sp24;
+//     s32 sp20;
+//     s32 sp1C;
+//     s32 sp18;
+//     s32 sp14;
+//     s32 sp10;
+//     EffectInstance* temp_v0;
+//     Gfx* temp_a1;
+//     Gfx* temp_a1_2;
+//     Gfx* temp_v0_2;
+//     Gfx* temp_v0_3;
+//     s32 var_v0;
+//     s32 var_v1;
+
+//     sp10 = 0;
+//     sp18 = 0;
+//     sp1C = 0;
+//     sp20 = 0;
+//     sp24 = 0;
+//     sp14 = 0x50;
+//     temp_v0 = shim_create_effect_instance((EffectBlueprint* ) &sp10);
+//     temp_a1 = gMasterGfxPos;
+//     temp_v0->data = NULL;
+//     temp_a1_2 = temp_a1 + 8;
+//     gMasterGfxPos = temp_a1_2;
+//     temp_a1->words.w0 = 0xE7000000;
+//     temp_a1->words.w1 = 0;
+//     temp_a1_2->words.w0 = 0xDB060024;
+//     gMasterGfxPos = temp_a1_2 + 8;
+//     temp_a1_2->words.w1 = (u32) (temp_v0->graphics->data + 0x80000000);
+//     if (arg0 == 0) {
+//         gMasterGfxPos = temp_a1_2 + 0x10;
+//         temp_a1_2->unk8 = 0xDE000000;
+//         var_v0 = 0x09000400;
+//         var_v1 = 0xFF4040E6;
+//     } else {
+//         var_v1 = 0x5050FFE6;
+//         gMasterGfxPos = temp_a1_2 + 0x10;
+//         temp_a1_2->unk8 = 0xDE000000;
+//         var_v0 = 0x090004A8;
+//     }
+//     temp_a1_2->unkC = var_v0;
+//     gMasterGfxPos = temp_a1_2 + 0x18;
+//     temp_a1_2->unk10 = 0xFA000000;
+//     temp_a1_2->unk14 = var_v1;
+//     temp_v0_2 = gMasterGfxPos;
+//     temp_v0_3 = temp_v0_2 + 8;
+//     gMasterGfxPos = temp_v0_3;
+//     temp_v0_2->words.w0 = 0xED000000;
+//     temp_v0_2->words.w1 = 0x5003C0;
+//     gMasterGfxPos = temp_v0_3 + 8;
+//     temp_v0_3->words.w0 = 0xE4300230;
+//     temp_v0_3->words.w1 = 0x200130;
+//     gMasterGfxPos = temp_v0_3 + 0x10;
+//     temp_v0_3->unk8 = 0xE1000000;
+//     temp_v0_3->unkC = 0x400;
+//     gMasterGfxPos = temp_v0_3 + 0x18;
+//     temp_v0_3->unk10 = 0xF1000000;
+//     temp_v0_3->unk14 = 0x04000400;
+//     gMasterGfxPos = temp_v0_3 + 0x20;
+//     temp_v0_3->unk18 = 0xE7000000;
+//     temp_v0_3->unk1C = 0;
+//     gMasterGfxPos = temp_v0_3 + 0x28;
+//     temp_v0_3->unk20 = 0xDB060000;
+//     temp_v0_3->unk24 = 0;
+//     shim_remove_effect(temp_v0);
+// }
+
+void quizmo_answer_main2(s32 arg)
+{
     // GFX:
     //  0: words:
     //      0: w0
@@ -58,48 +183,87 @@ void quizmo_answer_main(Gfx *gfxArg)
     //      3C: param
     //  3D: segment
 
+    EffectBlueprint blueprint;
+    EffectInstance *effect;
+    Gfx *gfx_1;
+    Gfx *gfx_2;
+    s32 int_1;
+
+    // gfxArg is located at 0x28(sp)
+    // blueprint is located at 0x10(sp)
+    // s0 = a0 (which is gfxArg)
+
+    blueprint.unk_00 = NULL;      // sw zero, 0x10(sp)
+    blueprint.init = NULL;        // sw zero, 0x18(sp)
+    blueprint.update = NULL;      // sw zero, 0x1c(sp)
+    blueprint.renderWorld = NULL; // sw zero, 0x20(sp)
+    blueprint.unk_14 = NULL;      // sw zero, 0x24(sp)
+
+    // v0 is EFFECT_QUIZMO_ANSWER (0x50)
+    blueprint.effectID = EFFECT_QUIZMO_ANSWER; // sw v0, 0x14(sp)
+
+    effect = shim_create_effect_instance(&blueprint); // jal shim_create_effect_instance
+
+    ////////////////////////
+    // ALL ABOVE IS CORRECT AS OF 7/29 @ 4:55PM EST
+    ////////////////////////
+
+    gDPPipeSync(gMasterGfxPos++);
+    // temp_a1 = gMasterGfxPos;
+    // temp_a1_2 = temp_a1 + 8;
+    // gMasterGfxPos = temp_a1_2;
+    // temp_a1->words.w0 = 0xE7000000;
+    // temp_a1->words.w1 = 0;
+
+    gSPSegment(gMasterGfxPos++, 0x09, 0x80000000);
+    // DB06002480000000
+    // temp_v0->data = NULL;
+    // temp_a1_2->words.w0 = 0xDB060024;
+    // gMasterGfxPos = temp_a1_2 + 8;
+    // temp_a1_2->words.w1 = (u32) (temp_v0->graphics->data + 0x80000000);
+
     // a0 = 0xdb060024
-    int_1 = 0xdb060024; // lui a0 0xdb06; ori a0 a0 0x24
+    // int_1 = 0xdb060024; // lui a0 0xdb06; ori a0 a0 0x24
 
     // a2 = gMasterGfxPos
     // a1 = 0(a2)
-    int_2 = gMasterGfxPos->words.w0; // lui a2, %hi(gMasterGfxPos); addiu a2, %lo(gMasterGfxPos); lw a1, 0(a2)
+    // int_2 = gMasterGfxPos->words.w0; // lui a2, %hi(gMasterGfxPos); addiu a2, %lo(gMasterGfxPos); lw a1, 0(a2)
 
     // t3 = v0 (which is 0x50, EFFECT_QUIZMO_ANSWER, from last section)
-    effect->data = NULL; // move t3, v0; sw zero, 0xc(t3)
+    // effect->data = NULL; // move t3, v0; sw zero, 0xc(t3)
 
-    gfx_1 = gMasterGfxPos; // move v1, a1
-    gMasterGfxPos += 0x1;
+    // gfx_1 = gMasterGfxPos; // move v1, a1
+    // gMasterGfxPos += 0x1;
 
     // gMasterGfxPos->words.w0 += 0x8; // addiu a1, a1, 8; sw a1, 0(a2)
-    gMasterGfxPos->words.w0 = int_2;
+    // gMasterGfxPos->words.w0 = int_2;
 
     // v0 = 0xe7000000
-    gMasterGfxPos->words.w0 = 0xE7000000; // lui v0, 0xe700; sw v0, 0(v1)
-    gMasterGfxPos->words.w1 = NULL;       // sw zero, 4(v1)
-    gfx_1->words.w0 = 0xdb060024;         // sw a0, 0(a1)
+    // gMasterGfxPos->words.w0 = 0xE7000000; // lui v0, 0xe700; sw v0, 0(v1)
+    // gMasterGfxPos->words.w1 = NULL;       // sw zero, 4(v1)
+    // gfx_1->words.w0 = 0xdb060024; // sw a0, 0(a1)
 
     //////////////////
     // WORKING ON ABOVE FOR MATCHING
     //////////////////
 
     // v1 = 0x10(t3) (EFFECT_THROW_SPINY???)
-    int_1 = EFFECT_THROW_SPINY; // lw v1, 0x10(t3)
+    // int_1 = EFFECT_THROW_SPINY; // lw v1, 0x10(t3)
 
     gMasterGfxPos = gfx_1 + 8; // addiu v0, a1, 8; sw v0, 0(a2)
 
     gfx_1->words.w1 = (u32)(effect->graphics->data + 0x80000000); // lw v0, 0x1c(v1); lui v1, 0x8000; addu v0, v0, v1
 
-    if (gfxArg == NULL) // bnez s0
+    if (arg == NULL) // bnez s0
     {
-        int_2 = 0xFF4040E6;                            // lui v1, 0xff40; ori v1, v1, 0x40e6
+        int_1 = 0xFF4040E6;                            // lui v1, 0xff40; ori v1, v1, 0x40e6
         gMasterGfxPos = gfx_1 + 0x10;                  // addiu v0, a1, 0x10; sw v0, 0(a2)
         int_1 = 0x09000400;                            // lui v0, 0x900; addiu v0, v0, 0x4a8
         gfx_1->force_structure_alignment = 0xDE000000; // lui v0, 0xde00; sw v0, 8(a1)
     }
     else
     {
-        int_2 = 0x5050FFE6;                            // lui v1, 0x5050; ori v1, v1, 0xffe6
+        int_1 = 0x5050FFE6;                            // lui v1, 0x5050; ori v1, v1, 0xffe6
         gMasterGfxPos = gfx_1 + 0x10;                  // addiu v0, a1, 0x10; sw v0, 0(a2)
         int_1 = 0x090004A8;                            // lui v0, 0x900; addiu v0, v0, 0x4a8
         gfx_1->force_structure_alignment = 0xDE000000; // lui v0, 0xde00; sw v0, 8(a1)
@@ -111,7 +275,7 @@ void quizmo_answer_main(Gfx *gfxArg)
 
     gMasterGfxPos = gfx_1 + 0x18; // addiu v0, a1, 0x18
     gfx_1->dma.par = 0xFA000000;  // lui v0, 0xfa00; sw v0, 0x10(a1)
-    gfx_1->dma.len = int_2;       // sw v1, 0x14(a1)
+    gfx_1->dma.len = int_1;       // sw v1, 0x14(a1)
 
     // sw v0, 0(a2)
 
@@ -140,10 +304,10 @@ void quizmo_answer_main(Gfx *gfxArg)
     gMasterGfxPos->words.w0 = 0xE4300230; // sw t1, 0(v0)
     gMasterGfxPos->words.w1 = 0x200130;   // sw t0, 4(v0)
     // sw v1, 0(a1)
-    gMasterGfxPos->dma.cmd = 0xE100;           // lui v1, 0xe100; sw v1, 8(v0)
-    gMasterGfxPos->dma.par = 0xE1000400;       // li v1, 0x400; sw v1, 0xc(v0)
-    gMasterGfxPos->words.w0 = gfxArg->tri.cmd; // addiu v1, v0, 0x18; sw v1, 0(a1)
-    gfxArg->dma.len = 0xF1000000;              // lui v1, 0xf100; sw v1, 0x10(v0)
+    gMasterGfxPos->dma.cmd = 0xE100;                  // lui v1, 0xe100; sw v1, 8(v0)
+    gMasterGfxPos->dma.par = 0xE1000400;              // li v1, 0x400; sw v1, 0xc(v0)
+    gMasterGfxPos->words.w0 = gMasterGfxPos->tri.cmd; // addiu v1, v0, 0x18; sw v1, 0(a1)
+    gMasterGfxPos->dma.len = 0xF1000000;              // lui v1, 0xf100; sw v1, 0x10(v0)
     // addiu v1, v0, 0x20
     // sw t2, 0x14(v0)
     // sw v1, 0(a1)
@@ -160,11 +324,11 @@ void quizmo_answer_main(Gfx *gfxArg)
     ////////////////
     // REFERENCE FROM MIPS_TO_C OUTPUT
     ////////////////
-    gfxArg = gMasterGfxPos; // temp_v0_2 = (a2_gMasterGfxPos + 0x20) ???
-    gfx_2 = gfxArg + 8;
+    // gfxArg = gMasterGfxPos; // temp_v0_2 = (a2_gMasterGfxPos + 0x20) ???
+    gfx_2 = gMasterGfxPos + 8;
     gMasterGfxPos = gfx_2;
-    gfxArg->words.w0 = 0xED000000;
-    gfxArg->words.w1 = 0x5003C0;
+    gMasterGfxPos->words.w0 = 0xED000000;
+    gMasterGfxPos->words.w1 = 0x5003C0;
     gMasterGfxPos = gfx_2 + 8;
     gfx_2->words.w0 = 0xE4300230;
     gfx_2->words.w1 = 0x200130;
